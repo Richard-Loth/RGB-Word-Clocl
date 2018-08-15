@@ -5,15 +5,19 @@ from ColorCalculation import *
 
 class UI:
     firstTime = False
-    listOfWordsOnCanvas = []
+    listOfWordTextTuples = []
+    BACKGROUND_COLOR = 240, 240, 240
 
     def __init__(self, storage):
+
         self.is_ready = False
         self.storage = storage
         self.window = Tk()
+        self.color_calculation = ColorCalculator(UI.BACKGROUND_COLOR)
+        self.background_fill_color = Utility.rgb_to_fill_color(*UI.BACKGROUND_COLOR)
         frame = Frame(self.window)
         self.sliders = SliderContainer(frame, self.slider_callback)
-        self.radioButtons = RadioButtonsContainer(frame, self.radioButton_callback)
+        self.radioButtons = RadioButtonsContainer(frame, self.radiobutton_callback)
         frame.grid(row=0, column=0, sticky=N)
 
         self.canvas = Canvas(self.window,
@@ -25,7 +29,7 @@ class UI:
     def slider_callback(self, value):
         self.storage.set_colour(self.sliders.get_colours())
 
-    def radioButton_callback(self):
+    def radiobutton_callback(self):
         self.storage.set_mode(self.radioButtons.get_selected_button())
 
     def start_ui(self):
@@ -34,32 +38,30 @@ class UI:
 
     def redraw(self):
         if self.is_ready:
-            font_color = self.calculate_color_of_words()
+            font_color = self.calculate_current_color()
             if not self.firstTime:
                 self.firstTime = True
-                self.draw_words_on_canvas(font_color)
+                self.draw_words_on_canvas()
             else:
                 self.reconfigure_words_on_canvas(font_color)
 
-    def calculate_color_of_words(self):
-
+    def calculate_current_color(self):
         red, green, blue = self.storage.colour
-        red, green, blue = ColorCalculator.calculateColor(self.storage.mode, red, green, blue)
-        font_color = "#" + Utility.decimalToHex(red) + Utility.decimalToHex(green) + Utility.decimalToHex(blue)
-        return font_color
+        red, green, blue = self.color_calculation.calculateColor(self.storage.mode, red, green, blue)
+        return Utility.rgb_to_fill_color(red,green,blue)
 
-    def draw_words_on_canvas(self, font_color):
+    def draw_words_on_canvas(self):
         for key, word in self.storage.words.items():
             size = 40
             text = self.canvas.create_text(50 + word.x_pos * (size * 0.75), word.y_pos * (size * 1.2),
                                            text=word.text, anchor=NW,
-                                           fill=font_color,
+                                           fill=self.background_fill_color,
                                            tag="word", font=("comic sans ms", str(size)))
-            self.listOfWordsOnCanvas.append(text)
+            self.listOfWordTextTuples.append((word, text))
 
     def reconfigure_words_on_canvas(self, font_color):
-        for word in self.listOfWordsOnCanvas:
-            self.canvas.itemconfigure(word, fill=font_color, )
+        for word,text in self.listOfWordTextTuples:
+            self.canvas.itemconfigure(text, fill=font_color if word.is_active else self.background_fill_color)
 
     @staticmethod
     def create_label(master, text, x, y):

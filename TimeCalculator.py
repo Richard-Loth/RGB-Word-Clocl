@@ -11,27 +11,27 @@ class TimeCalculator:
 
     def _fill_minute_to_expression_dictionary(self):
         time_expressions = TimeExpressions()
-        for i in range(0, 4):
+        for i in range(0, 5):
             self.minute_to_expression[i] = time_expressions.simple_hour_expression
-        for i in range(5, 14):
+        for i in range(5, 15):
             self.minute_to_expression[i] = time_expressions.simple_after_hour_expression
-        for i in range(15, 19):
+        for i in range(15, 20):
             self.minute_to_expression[i] = time_expressions.quarter_hour_expression
-        for i in range(20, 24):
+        for i in range(20, 25):
             self.minute_to_expression[i] = time_expressions.simple_after_hour_expression
-        for i in range(25, 29):
+        for i in range(25, 30):
             self.minute_to_expression[i] = time_expressions.five_before_half_expression
-        for i in range(30, 34):
+        for i in range(30, 35):
             self.minute_to_expression[i] = time_expressions.half_hour_expression
-        for i in range(35, 39):
+        for i in range(35, 40):
             self.minute_to_expression[i] = time_expressions.after_half_hour_expression
-        for i in range(40, 44):
+        for i in range(40, 45):
             self.minute_to_expression[i] = time_expressions.after_half_hour_expression
-        for i in range(45, 49):
+        for i in range(45, 50):
             self.minute_to_expression[i] = time_expressions.quarter_before_expression
-        for i in range(50, 54):
+        for i in range(50, 55):
             self.minute_to_expression[i] = time_expressions.before_hour_expression
-        for i in range(55, 59):
+        for i in range(55, 60):
             self.minute_to_expression[i] = time_expressions.before_hour_expression
 
     def set_visibility_of_all_words(self):
@@ -53,23 +53,23 @@ class TimeExpressions:
         self.fill_minute_to_distance_dic()
 
     def fill_minute_to_distance_dic(self):
-        for i in range(5, 9):
+        for i in range(5, 10):
             self.minute_to_distance[i] = DISTANCE_FIVE
-        for i in range(10, 14):
+        for i in range(10, 15):
             self.minute_to_distance[i] = DISTANCE_TEN
-        for i in range(20, 24):
+        for i in range(20, 25):
             self.minute_to_distance[i] = DISTANCE_TWENTY
-        for i in range(35, 39):
+        for i in range(35, 40):
             self.minute_to_distance[i] = DISTANCE_FIVE
-        for i in range(40, 44):
+        for i in range(40, 45):
             self.minute_to_distance[i] = DISTANCE_TEN
-        for i in range(50, 54):
+        for i in range(50, 55):
             self.minute_to_distance[i] = DISTANCE_TEN
-        for i in range(55, 59):
+        for i in range(55, 60):
             self.minute_to_distance[i] = DISTANCE_FIVE
 
     def simple_hour_expression(self, now):
-        return TimeConstants.get_hour_constants(now.hour % 12)
+        return (TimeConstants.get_hour_constants(now.hour % 12)),
 
     def simple_after_hour_expression(self, now):
         hour_identifier = TimeConstants.get_hour_constants(now.hour % 12)
